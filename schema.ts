@@ -1,4 +1,4 @@
-import { z } from "https://deno.land/x/zod/mod.ts";
+import { z } from "https://deno.land/x/zod@v3.20.5/mod.ts";
 
 // Set the version here, and validate it everywhere else!
 const schemaVersion = "0.1.8";
@@ -50,10 +50,11 @@ export const projectSchema = z
         title: z.string().describe("Official title of the project"),
         abbr: z
           .string()
+          .max(16) // Sanity check
           .describe("Abbreviation of the project title (optional)"),
         type: z
-          .enum(["organisation", "project"])
-          .describe("Entity type (organisation | project)"),
+          .enum(["organization", "project"])
+          .describe("Entity type (organization | project)"),
         ref: z
           .array(z.union([z.string().url(), z.literal("")]))
           .describe("List of authority file URIs"),
@@ -80,7 +81,7 @@ export const projectSchema = z
           .describe("List of project website URLs"),
         project_desc: z
           .string()
-          .max(800)
+          .max(750) // Would like to lower this further
           .describe("Short description of the project"),
         places: z
           .array(
