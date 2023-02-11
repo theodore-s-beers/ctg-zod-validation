@@ -1,22 +1,20 @@
 import { z } from "https://deno.land/x/zod@v3.20.5/mod.ts";
 
-// Set the version here, and validate it everywhere else!
+// Set version here, validate everywhere else!
 const schemaVersion = "0.1.8";
 
 // Regular expressions
 const isoCode = /^[a-z]{3}$/; // Can we do better than this?
 const latLng = /^-?\d{1,3}(\.\d{1,5})?$/;
 
-// Build a list of valid keywords, fetching over localhost
-const keywordsRes = await fetch("http://localhost:3000/KEYWORDS/KEYWORDS.json");
-const keywordsJson: Record<string, string[]> = await keywordsRes.json();
-const keywords = Object.values(keywordsJson).flat();
-// Ensure no duplicates
-const keywordsSet = new Set(keywords);
-if (keywordsSet.size !== keywords.length) {
-  throw new Error("Duplicate keywords found");
-}
-// Make list into a Zod enum
+// Build list of valid keywords
+const keywordsFile = Deno.readTextFileSync(
+  "../closing-the-gap/KEYWORDS/KEYWORDS.json"
+);
+const keywordsObj: Record<string, string[]> = JSON.parse(keywordsFile);
+export const keywords = Object.values(keywordsObj).flat();
+
+// Make keywords list into Zod enum
 const keywordsEnum: [string, ...string[]] = [keywords[0], ...keywords.slice(1)];
 
 //
