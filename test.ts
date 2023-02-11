@@ -15,7 +15,6 @@ Deno.test("validate project template", () => {
   // Fill in required fields
   template.record_metadata.uuid = crypto.randomUUID();
   template.record_metadata.record_created_on = Date();
-  template.project.type = "project";
 
   projectSchema.parse(template);
 });
